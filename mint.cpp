@@ -1,3 +1,9 @@
+/*
+ * Author: Andy Zhu
+ * @date    2024-03-21 21:18:22
+ * @version 1.0.0
+ */
+
 template <int mod = 998'244'353> class mint {
     // obtaining inverse
     void exgcd(int a, int b, int& x, int& y) {

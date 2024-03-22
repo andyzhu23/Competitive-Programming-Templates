@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Date    : 2024-03-21 21:19:42
+# @Author  : Andy Zhu
+# @Version : 1.0.0
+
 import heapq
 class pq:
     def __init__(self, ):
