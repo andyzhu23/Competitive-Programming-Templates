@@ -8,7 +8,7 @@
 using namespace std;
 
 // using mt = mint<>;
-namespace combinatorics {
+namespace comb {
     vector<mt> _fac, _ifac;
     int _size = -1;
 
@@ -44,4 +44,4 @@ namespace combinatorics {
         return fac(a) * ifac(b);
     }
 }
-using namespace combinatorics;
+using namespace comb;
