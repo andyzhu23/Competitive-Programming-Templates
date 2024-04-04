@@ -19,6 +19,7 @@ public:
     template <typename T> mint(T _v) :v((int)(_v % mod)) { v = (v + mod) % mod; }
 
     template <typename T> mint& operator=(T a) { v = (a + mod) % mod; return *this; }
+    mint operator-() { return mint((-v + mod) % mod); } 
     mint& operator+=(mint o) { v = (v + o.v) % mod; return *this; }
     mint& operator-=(mint o) { v = (v - o.v + mod) % mod; return *this; }
     mint inv() { int x, y; exgcd(v, mod, x, y); return mint((x + mod) % mod); }
