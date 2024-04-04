@@ -13,7 +13,7 @@ class DSU {
 public: 
     DSU(int n) :n(n) {
         f.resize(n + 1);
-        sz.resize(n + 1);
+        sz.resize(n + 1, 1);
         iota(f.begin(), f.end(), 0);
     }
     int Find(int x) { return f[x] == x ? x : f[x] = Find(f[x]); }
@@ -30,4 +30,5 @@ public:
         int fv = Find(v);
         return fu == fv;
     }
+    int size(int x) { return sz[Find(x)]; }
 };
