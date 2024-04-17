@@ -22,7 +22,7 @@ public:
         int fv = Find(v);
         if(fu == fv) return 0;
         f[fv] = fu;
-        sz[fu] += fv;
+        sz[fu] += sz[fv];
         return 1;
     }
     bool same(int u, int v) {
