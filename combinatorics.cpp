@@ -41,7 +41,7 @@ namespace comb {
     }
     mt nPr(int a, int b) {
         if(a < b || a < 0 || b < 0) return 0;
-        return fac(a) * ifac(b);
+        return fac(a) * ifac(a - b);
     }
 }
 using namespace comb;
