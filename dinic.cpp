@@ -24,12 +24,7 @@ class Dinic {
 
 public:
     int S, T;
-    Dinic(int n, int m) {
-        (*this).n = n + 1;
-        (*this).m = m + 1;
-         S = 0;
-         T = n + 1;
-        tot = 1;
+    Dinic(int n, int m) :n(n + 1), m(m + 1), S(0), T(n + 1), tot(1) {
         a.resize(n + 2);
         dist.resize(n + 2);
         e.resize(m + 2);
