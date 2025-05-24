@@ -1,7 +1,7 @@
 /*
  * Author: Andy Zhu
- * @date    2024-03-21 21:22:14
- * @version 1.0.0
+ * @date    ${date}
+ * @version ${6:1.0.0}
  */
 
 // optimize

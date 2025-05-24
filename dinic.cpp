@@ -24,13 +24,7 @@ class Dinic {
 
 public:
     int S, T;
-    Dinic(int n, int m) :n(n + 1), m(m + 1), S(0), T(n + 1), tot(1) {
-        a.resize(n + 2);
-        dist.resize(n + 2);
-        e.resize(m + 2);
-        head.resize(n + 2);
-        vis.resize(n + 2);
-    }
+    Dinic(int n, int m) :n(n + 1), m(m + 1), S(0), T(n + 1), tot(1), ans(0), a(n + 3), dist(n + 3), e(m + 2), head(n + 3), vis(n + 3) {}
 
     void add(int u, int v, ll w, ll f) {
         e[++tot] = {u, v, w, f, head[u]};

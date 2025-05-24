@@ -46,7 +46,7 @@ struct virtual_tree {
         });
         int n = a.size();
         for(int i = 1;i<n;++i) {
-            a.pb(LCA(a[i], a[i - 1]));
+            a.push_back(LCA(a[i], a[i - 1]));
         }
         sort(a.begin(), a.end(), [](int a, int b) {
             return dfn[a] < dfn[b];
@@ -55,7 +55,7 @@ struct virtual_tree {
         for(int i = 1;i<a.size();++i) {
             if(dep[root] > dep[a[i]]) root = a[i];
             int lca = LCA(a[i], a[i - 1]);
-            if(a[i] != lca) e[lca].pb(a[i]);
+            if(a[i] != lca) e[lca].push_back(a[i]);
         }
     }
     // tree stuffs

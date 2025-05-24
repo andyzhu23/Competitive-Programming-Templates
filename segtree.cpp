@@ -12,10 +12,11 @@ template <typename T> class segtree {
     int n;
 #define lc (rt << 1)
 #define rc (rt << 1 | 1)
+    T op(T a, T b) { return a + b; }
     void push_up(int rt) {
-        st[rt] = st[lc] + st[rc];
+        st[rt] = op(st[lc], st[rc]);
     }
-    void build(int rt, int l, int r, vector<int>& a) {
+    void build(int rt, int l, int r, vector<T>& a) {
         if(l == r) {
             st[rt] = a[l - 1];
             return;
@@ -40,12 +41,10 @@ template <typename T> class segtree {
         int mid = (l + r) >> 1;
         if(y <= mid) return query(lc, l, mid, x, y);
         else if(x > mid) return query(rc, mid + 1, r, x, y);
-        else return query(lc, l, mid, x, mid) + query(rc, mid + 1, r, mid + 1, y);
+        else return op(query(lc, l, mid, x, mid), query(rc, mid + 1, r, mid + 1, y));
     }
 public:
-    segtree(int n) :n(n) {
-        st.resize((n << 2) + 5);
-    }
+    segtree(int n) :n(n), st((n << 2) + 5) {}
     segtree(vector<T>& a) {
         n = a.size();
         st.resize((a.size() << 2) + 5);

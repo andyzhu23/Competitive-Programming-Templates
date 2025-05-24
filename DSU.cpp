@@ -11,9 +11,7 @@ class DSU {
     vector<int> f, sz;
     int n;
 public: 
-    DSU(int n) :n(n) {
-        f.resize(n + 1);
-        sz.resize(n + 1, 1);
+    DSU(int n) :n(n), f(n + 1), sz(n + 1, 1) {
         iota(f.begin(), f.end(), 0);
     }
     int Find(int x) { return f[x] == x ? x : f[x] = Find(f[x]); }

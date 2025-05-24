@@ -127,15 +127,7 @@ template <typename T> class splay_tree {
 
 public:
 
-    splay_tree(int n) :n(n) {
-        size.resize(n);
-        fa.resize(n);
-        lc.resize(n);
-        rc.resize(n);
-        cnt.resize(n);
-        val.resize(n);
-        tot = 0;
-    }
+    splay_tree(int n) :n(n), size(n), fa(n), lc(n), rc(n), cnt(n), val(n), tot(0) {}
 
     void erase(T x) {
         int rt = Find(root, x);

@@ -57,10 +57,7 @@ template <typename T> class lazy_min_segtree {
         else return min(query(lc, l, mid, x, mid), query(rc, mid + 1, r, mid + 1, y));
     }
 public:
-    lazy_min_segtree(int n) :n(n) {
-        st.resize((n << 2) + 5, inf);
-        lazy.resize((n << 2) + 5, inf);
-    }
+    lazy_min_segtree(int n) :n(n), st((n << 2) + 5, inf), lazy((n << 2) + 5, inf) {}
     lazy_min_segtree(vector<T>& a) {
         n = a.size();
         st.resize((a.size() << 2) + 5, inf);

@@ -54,10 +54,7 @@ template <typename T> class lazy_sum_segtree {
         else return query(lc, l, mid, x, mid) + query(rc, mid + 1, r, mid + 1, y);
     }
 public:
-    lazy_sum_segtree(int n) :n(n) {
-        st.resize((n << 2) + 5);
-        lazy.resize((n << 2) + 5);
-    }
+    lazy_sum_segtree(int n) :n(n), st((n << 2) + 5), lazy((n << 2) + 5) {}
     lazy_sum_segtree(vector<T>& a) {
         n = a.size();
         st.resize((a.size() << 2) + 5);

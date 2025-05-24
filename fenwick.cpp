@@ -19,7 +19,10 @@ template <typename T> class fenwick {
     }
 
 public:
-    fenwick(int n) :n(n) {
+    fenwick() {}
+    fenwick(int n) : n(n), d(n + 1), muld(n + 1) {}
+    void resize(int N) {
+        n = N;
         d.resize(n + 1);
         muld.resize(n + 1);
     }

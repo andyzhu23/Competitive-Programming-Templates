@@ -7,16 +7,20 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-template <typename T, int MOD, int BASE> class Hash {
+
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+#define random(a, b) rng() % (b - a + 1) + a
+
+int MOD = 998244853;
+int BASE = random(120, 10000);
+template <typename T> class Hash {
     int n;
     vector<T> p;
     const int mod = MOD;
     const int base = BASE;
     vector<T> h;
 public:
-    template <typename S> Hash(S a) {
-        n = a.size();
-        h.resize(n), p.resize(n);
+    template <typename S> Hash(S a) : n(a.size()), h(n), p(n) {
         p[0] = 1;
          for(int i = 1;i<n;++i) p[i] = p[i - 1] * base % mod;
         h[0] = a[0] % mod;
@@ -28,7 +32,8 @@ public:
          if (l == 0) return h[r];
         return (h[r] - h[l - 1] * p[r - l + 1] % mod + mod) % mod;
     }
-    bool contains(Hash<T, MOD, BASE>& o) {
+    bool contains(Hash<T>& o) {
+     if(h.size() < o.size()) return 0;
         for(int i = 0;i<=h.size() - o.size();++i) {
             if(get(i, i + o.size() - 1) == o.key()) {
                 return 1;
@@ -36,7 +41,7 @@ public:
         }
         return 0;
     }
-    int max_concat(Hash<T, MOD, BASE>& o) {
+    int max_concat(Hash<T>& o) {
         for(int k = min(size(), o.size());k>=1;--k) {
             if(get(size() - k, size() - 1) == o.get(0, k - 1)) {
                 return k;
@@ -44,7 +49,7 @@ public:
         }
         return 0;
     }
-    int max_pref(Hash<T, MOD, BASE>& o) {
+    int max_pref(Hash<T>& o) {
         int lo = 0, hi = min(size(), o.size());
         int ans = 0;
         while(lo <= hi) {
@@ -56,7 +61,7 @@ public:
         }
         return ans;
     }
-    int max_suf(Hash<T, MOD, BASE>& o) {
+    int max_suf(Hash<T>& o) {
         int lo = 0, hi = min(size(), o.size());
         int ans = 0;
         while(lo <= hi) {

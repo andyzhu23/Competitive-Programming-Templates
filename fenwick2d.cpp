@@ -37,19 +37,7 @@ template <typename T> class fenwick2d {
 
 public:
 
-    fenwick2d(int N, int M) {
-        n = N + 1, m = M + 1;
-        d.resize(n);
-        di.resize(n);
-        dj.resize(n);
-        dij.resize(n);
-        for(int i = 0;i<n;++i) {
-            d[i].resize(m);
-            di[i].resize(m);
-            dj[i].resize(m);
-            dij[i].resize(m);
-        }
-    }
+    fenwick2d(int n, int m) : n(n + 1), m(m + 1), d(n + 1, vec<T>(m + 1)), di(n + 1, vec<T>(m + 1)), dj(n + 1, vec<T>(m + 1)), dij(n + 1, vec<T>(m + 1)) {}
 
     void update(int x, int y, int x2, int y2, T val) {
         update(x, y, val);
