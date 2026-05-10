@@ -1,50 +1,42 @@
-/*
- * Author: Andy Zhu
- * @date    2024-03-21 21:18:22
- * @version 1.0.0
- */
-
-#include <bits/stdc++.h>
-using namespace std;
-
+#include <vector>
+#include <iostream>
+namespace cp {
+#ifndef CP_SPLAY_TREE
+#define CP_SPLAY_TREE
 template <typename T> class splay_tree {
-    vector<int> size, fa, lc, rc, cnt;
-    vector<T> val;
-    int root, tot, n;
-#define chk(rt) (rc[fa[rt]] != rt)
+    struct Node { int size, fa, lc, rc, cnt; T val; };
 
+    int new_node(T x) { nodes.push_back({1, 0, 0, 0, 1, x}); return (int)nodes.size() - 1; }
+    bool chk(int rt) const { return nodes[nodes[rt].fa].rc != rt; }
 
     void update(int rt) {
-        size[rt] = size[lc[rt]] + size[rc[rt]] + cnt[rt];
-        fa[lc[rt]] = fa[rc[rt]] = rt;
+        nodes[rt].size = nodes[nodes[rt].lc].size + nodes[nodes[rt].rc].size + nodes[rt].cnt;
+        nodes[nodes[rt].lc].fa = nodes[nodes[rt].rc].fa = rt;
     }
     void turn(int x) {
-        int y = fa[x];
-        int z = fa[y];
+        int y = nodes[x].fa;
+        int z = nodes[y].fa;
         int tmp;
         if(chk(x)) {
-            // right turn
-            tmp = rc[x];
-            rc[x] = y;
-            lc[y] = tmp;
+            tmp = nodes[x].rc;
+            nodes[x].rc = y;
+            nodes[y].lc = tmp;
         } else {
-            // left turn
-            tmp = lc[x];
-            lc[x] = y;
-            rc[y] = tmp;
+            tmp = nodes[x].lc;
+            nodes[x].lc = y;
+            nodes[y].rc = tmp;
         }
-        fa[tmp] = y;
-        fa[y] = x;
-        fa[x] = z;
-        lc[z] == y ? lc[z] = x : rc[z] = x;
+        nodes[tmp].fa = y;
+        nodes[y].fa = x;
+        nodes[x].fa = z;
+        nodes[z].lc == y ? nodes[z].lc = x : nodes[z].rc = x;
         update(y);
         update(x);
     }
-
     void splay(int rt) {
-        while(fa[rt]) {
-            if(fa[fa[rt]]) {
-                if(chk(fa[rt]) == chk(rt)) turn(fa[rt]);
+        while(nodes[rt].fa) {
+            if(nodes[nodes[rt].fa].fa) {
+                if(chk(nodes[rt].fa) == chk(rt)) turn(nodes[rt].fa);
                 else turn(rt);
             }
             turn(rt);
@@ -52,120 +44,101 @@ template <typename T> class splay_tree {
         root = rt;
     }
 
-    void insert(int& rt, T x) {
-        if(rt == 0) {
-            rt = ++tot;
-            size[rt] = 1;
-            cnt[rt] = 1;
-            val[rt] = x;
-            return;
-        } else if(val[rt] == x) cnt[rt]++;
-        else if(val[rt] > x) insert(lc[rt], x);
-        else insert(rc[rt], x);
+    int insert_helper(int rt, T x) {
+        if(rt == 0) return new_node(x);
+        if(nodes[rt].val == x) ++nodes[rt].cnt;
+        else if(nodes[rt].val > x) nodes[rt].lc = insert_helper(nodes[rt].lc, x);
+        else nodes[rt].rc = insert_helper(nodes[rt].rc, x);
         update(rt);
-    }
-
-    int Find(int& rt, T x) {
-        if(rt == 0) return -1;
-        if(val[rt] == x) {
-            splay(rt);
-            return root;
-        }
-        else if(val[rt] > x) return Find(lc[rt], x);
-        else return Find(rc[rt], x);
-    }
-
-    int preans;
-    void pre(int& rt, T x) {
-        if(rt == 0) return;
-        if(val[rt] < x) {
-            preans = rt;
-            pre(rc[rt], x);
-        } else pre(lc[rt], x);
-    }
-
-    int succans;
-    void succ(int& rt, T x) {
-        if(rt == 0) return;
-        if(val[rt] > x) {
-            succans = rt;
-            succ(lc[rt], x);
-        } else succ(rc[rt], x);
-    }
-
-    int rnk(int& rt, T x) {
-        if(rt == 0) return 0;
-        if(val[rt] == x) return size[lc[rt]] + 1;
-        else if(val[rt] > x) return rnk(lc[rt], x);
-        else return rnk(rc[rt], x) + size[lc[rt]] + cnt[rt];
-    }
-
-    T id(int& rt, int x) {
-        if(rt == 0) return 0;
-        if(size[lc[rt]] >= x) return id(lc[rt], x);
-        else if(size[lc[rt]] + cnt[rt] >= x) return val[rt];
-        else return id(rc[rt], x - size[lc[rt]] - cnt[rt]);
-    }
-
-    int Max(int& rt) {
-        if(rc[rt]) return Max(rc[rt]);
-        else return rt;
-    }
-
-    int join(int& x, int& y) {
-        if(x * y == 0) return x + y;
-        int rt = Max(x);
-        splay(rt);
-        root = rt;
-        rc[rt] = y;
-        fa[y] = rt;
-        update(root);
         return rt;
     }
-
-#undef chk(rt)
+    int find_helper(int rt, T x) {
+        if(rt == 0) return -1;
+        if(nodes[rt].val == x) { splay(rt); return root; }
+        else if(nodes[rt].val > x) return find_helper(nodes[rt].lc, x);
+        else return find_helper(nodes[rt].rc, x);
+    }
+    int pre_helper(int rt, T x) const {
+        if(rt == 0) return 0;
+        if(nodes[rt].val < x) {
+            int r = pre_helper(nodes[rt].rc, x);
+            return r ? r : rt;
+        }
+        return pre_helper(nodes[rt].lc, x);
+    }
+    int succ_helper(int rt, T x) const {
+        if(rt == 0) return 0;
+        if(nodes[rt].val > x) {
+            int r = succ_helper(nodes[rt].lc, x);
+            return r ? r : rt;
+        }
+        return succ_helper(nodes[rt].rc, x);
+    }
+    int rnk_helper(int rt, T x) const {
+        if(rt == 0) return 0;
+        if(nodes[rt].val == x) return nodes[nodes[rt].lc].size + 1;
+        else if(nodes[rt].val > x) return rnk_helper(nodes[rt].lc, x);
+        else return rnk_helper(nodes[rt].rc, x) + nodes[nodes[rt].lc].size + nodes[rt].cnt;
+    }
+    T id_helper(int rt, int x) const {
+        if(rt == 0) return T{};
+        if(nodes[nodes[rt].lc].size >= x) return id_helper(nodes[rt].lc, x);
+        else if(nodes[nodes[rt].lc].size + nodes[rt].cnt >= x) return nodes[rt].val;
+        else return id_helper(nodes[rt].rc, x - nodes[nodes[rt].lc].size - nodes[rt].cnt);
+    }
+    int max_helper(int rt) const {
+        return nodes[rt].rc ? max_helper(nodes[rt].rc) : rt;
+    }
+    int join(int x, int y) {
+        if(x == 0 || y == 0) return x + y;
+        int m = max_helper(x);
+        splay(m);
+        root = m;
+        nodes[m].rc = y;
+        nodes[y].fa = m;
+        update(root);
+        return m;
+    }
+    void print_subtree(int rt) const {
+        if(rt == 0) return;
+        const auto& n = nodes[rt];
+        std::cout << "rt: " << rt << ", lc: " << n.lc << ", rc: " << n.rc
+                  << ", sz: " << n.size << ", cnt: " << n.cnt << ", father: " << n.fa << '\n';
+        print_subtree(n.lc);
+        print_subtree(n.rc);
+    }
+    void inorder(std::ostream& os, int rt) const {
+        if(rt == 0) return;
+        inorder(os, nodes[rt].lc);
+        for(int i = 0; i < nodes[rt].cnt; ++i) os << nodes[rt].val << ' ';
+        inorder(os, nodes[rt].rc);
+    }
 
 public:
+    splay_tree() : nodes(1) {} // index 0 is the sentinel; tree grows dynamically via push_back
+    void reserve(int n) { nodes.reserve(n + 1); } // pre-allocate for n inserts (+1 for sentinel)
 
-    splay_tree(int n) :n(n), size(n), fa(n), lc(n), rc(n), cnt(n), val(n), tot(0) {}
-
+    void insert(T x) { root = insert_helper(root, x); splay(find_helper(root, x)); }
+    int find(T x) { return find_helper(root, x); }
+    int pre(T x) const { return pre_helper(root, x); }
+    int succ(T x) const { return succ_helper(root, x); }
+    int rnk(T x) const { return rnk_helper(root, x); }
+    T id(int x) const { return id_helper(root, x); }
+    int max() const { return max_helper(root); }
     void erase(T x) {
-        int rt = Find(root, x);
-        if(rt == -1 || !rt) return;
-        if(--cnt[rt] > 0) {
-            update(rt);
-            return;
-        }
-        root = join(lc[rt], rc[rt]);
-        fa[root] = 0;
+        int rt = find_helper(root, x);
+        if(rt == -1 || rt == 0) return;
+        if(--nodes[rt].cnt > 0) { update(rt); return; }
+        root = join(nodes[rt].lc, nodes[rt].rc);
+        nodes[root].fa = 0;
     }
+    void print() const { print_subtree(root); }
+    friend std::ostream& operator<<(std::ostream& os, const splay_tree& t) { t.inorder(os, t.root); return os; }
 
-
-    void insert(T x) { insert(root, x); splay(Find(root, x)); }
-
-    int Find(T x) { return Find(root, x); }
-
-    int pre(T x) {
-        pre(root, x);
-        return preans;
-    }
-
-    int succ(T x) {
-        succ(root, x);
-        return succans;
-    }
-
-    int rnk(T x) { return rnk(root, x); }
-
-    T id(int x) { return id(root, x); }
-
-    int max() { return Max(root); }
-    
-    void print(int rt){
-        if(rt == 0) return;
-        printf("rt: %d, lc:%d, rc:%d, sz:%d, cnt:%d, father:%d\n", rt, lc[rt], rc[rt], size[rt], cnt[rt], fa[rt]);
-        print(lc[rt]);
-        print(rc[rt]);
-    }
-
+private:
+    std::vector<Node> nodes;
+    int root = 0;
 };
+
+#endif // CP_SPLAY_TREE
+} // namespace cp
