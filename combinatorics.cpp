@@ -16,8 +16,8 @@ template <typename mt> class Combinatorics {
     }
 
 public:
-    Combinatorics() = default;
     Combinatorics(int n) { resize(n); }
+    Combinatorics() : Combinatorics(1) {}
 
     mt fac(int x) { if(x > cap) resize(x); return _fac[x]; }
     mt ifac(int x) { if(x > cap) resize(x); return _ifac[x]; }
