@@ -3,6 +3,10 @@
 namespace cp {
 #ifndef CP_SPLAY_TREE
 #define CP_SPLAY_TREE
+template <typename T>
+concept Comparable = requires(T a) {
+    {a < a} -> std::convertible_to<bool>;
+};
 template <typename T> class splay_tree {
     struct Node { int size, fa, lc, rc, cnt; T val; };
 
