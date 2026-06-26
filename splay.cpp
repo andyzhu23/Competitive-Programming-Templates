@@ -7,7 +7,7 @@ template <typename T>
 concept Comparable = requires(T a) {
     {a < a} -> std::convertible_to<bool>;
 };
-template <typename T> class splay_tree {
+template <Comparable T> class splay_tree {
     struct Node { int size, fa, lc, rc, cnt; T val; };
 
     int new_node(T x) { nodes.push_back({1, 0, 0, 0, 1, x}); return (int)nodes.size() - 1; }
