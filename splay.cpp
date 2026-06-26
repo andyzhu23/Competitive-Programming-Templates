@@ -117,7 +117,7 @@ public:
         int rt = root, last = 0, ans = 0;
         while(rt) {
             last = rt;
-            if(nodes[rt].val == x) { ans += nodes[nodes[rt].lc].size + 1; splay(rt); return ans; }
+            if(nodes[rt].val == x) { ans += nodes[nodes[rt].lc].size; splay(rt); return ans; }
             if(nodes[rt].val > x) rt = nodes[rt].lc;
             else { ans += nodes[nodes[rt].lc].size + nodes[rt].cnt; rt = nodes[rt].rc; }
         }
